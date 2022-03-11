@@ -97,7 +97,7 @@ function CreateNFT() {
       console.log('IPFS', ipfs);
       axios({
         method: 'POST',
-        url: `http://${process.env.REACT_APP_API}/baseurl`,
+        url: `https://${process.env.REACT_APP_API}/baseurl`,
         data: {
           baseurl: collection.baseurl,
           tokenId: tokenId,
