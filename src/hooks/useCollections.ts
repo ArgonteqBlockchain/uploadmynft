@@ -14,7 +14,7 @@ export const useCollections = ({ owner }: { owner?: string }) => {
     console.info('CALLING API');
     axios({
       method: 'get',
-      url: `http://${process.env.REACT_APP_API}/collections/?owner=${account}`,
+      url: `https://${process.env.REACT_APP_API}/collections/?owner=${account}`,
       responseType: 'json',
     })
       .then((response) => {

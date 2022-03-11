@@ -4,7 +4,7 @@ import { IToken } from 'src/models/nft';
 
 export const useTokens = ({ collectionAddress, owner }: { collectionAddress?: string; owner?: string }) => {
   const [tokens, setTokens] = useState([] as IToken[]);
-  let url = `http://${process.env.REACT_APP_API}/tokens/?`;
+  let url = `https://${process.env.REACT_APP_API}/tokens/?`;
   if (collectionAddress != undefined && collectionAddress != null) {
     url += `address=${collectionAddress}&`;
   }

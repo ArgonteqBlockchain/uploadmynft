@@ -19,7 +19,7 @@ export const useCollectionsTokens = ({ collectionOwner }: { collectionOwner?: st
     console.info('CALLING API');
     axios({
       method: 'get',
-      url: `http://${process.env.REACT_APP_API}/collections/?owner=${account}`,
+      url: `https://${process.env.REACT_APP_API}/collections/?owner=${account}`,
       responseType: 'json',
     })
       .then((response) => {
@@ -40,7 +40,7 @@ export const useCollectionsTokens = ({ collectionOwner }: { collectionOwner?: st
     // if (!tempData) {
     for (const collection of collections) {
       // const t = tokens;
-      const { data } = await axios.get(`http://${process.env.REACT_APP_API}/tokens/?address=${collection.address}`);
+      const { data } = await axios.get(`https://${process.env.REACT_APP_API}/tokens/?address=${collection.address}`);
       // setdata(data);
       if (data && data.length > 0) {
         // console.log(data);
