@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react';
 
 export const useLocalStorage = (parentItem: string) => {
-  const [item, setItem] = useState(JSON.parse(localStorage.getItem(parentItem)) || {});
+  const [item, setMyItem] = useState(JSON.parse(localStorage.getItem(parentItem)) || {});
 
-  const getInfo = useCallback(
+  const getItem = useCallback(
     (key: string, value = true) => {
       if (!item[key]) {
         const newItem = { ...item, [key]: value };
         localStorage.setItem(parentItem, JSON.stringify(newItem));
-        setItem(newItem);
+        setMyItem(newItem);
         return newItem[key];
       }
       return item[key];
@@ -16,16 +16,16 @@ export const useLocalStorage = (parentItem: string) => {
     [item, parentItem],
   );
 
-  const setInfo = useCallback(
+  const setItem = useCallback(
     (key: string, value: boolean) => {
       const newItem = { ...item, [key]: value };
       localStorage.setItem(parentItem, JSON.stringify(newItem));
-      setItem(newItem);
+      setMyItem(newItem);
     },
     [item, parentItem],
   );
 
-  return { item, getInfo, setInfo };
+  return { item, getItem, setItem };
 };
 
 export default useLocalStorage;
