@@ -45,9 +45,6 @@ const getURL = (imgLink: string, visibleValueCount: number = 6) => {
 };
 
 const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
-  // TODO: Fetch all nfts against a collection name
-  const { account, active, error } = useWeb3React();
-  // const [tokens, setTokens] = useState([]);
   const [nfts, setNfts] = useState([]);
 
   const [page, setPage] = useState<number>(0);
@@ -55,12 +52,11 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
 
   const location = useLocation();
   const collection: Collection = location.state as any;
-  const title = `NFTS (${collection.name})`;
 
   useEffect(() => {
     axios({
       method: 'get',
-      url: `https://${collection.baseurl}`,
+      url: `http://${collection.baseurl}`,
       responseType: 'json',
     })
       .then((res) => {
@@ -87,11 +83,10 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
   };
 
   const paginatedCollections = applyPagination(nfts, page, limit);
-  const theme = useTheme();
 
   return (
     <Card>
-      <CardHeader title={title} />
+      <CardHeader title="NFTS" />
       <Divider />
       <TableContainer>
         <Table>
@@ -101,7 +96,6 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
               <TableCell>Name</TableCell>
               <TableCell>Image</TableCell>
               <TableCell>Details</TableCell>
-              {/* <TableCell>Actions</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>

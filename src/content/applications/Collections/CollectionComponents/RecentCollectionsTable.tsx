@@ -62,7 +62,9 @@ const RecentCollectionsTable: FC<RecentCollectionsTableProps> = ({ collections }
               <TableCell>Name</TableCell>
               <TableCell align="right">Symbol</TableCell>
               <TableCell align="right">Address</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="right" id="manageNFT">
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -91,10 +91,10 @@ function NFTDistribution() {
           width: '80%',
         }}
       >
-        <InputLabel id="demo-simple-select-label">Collection</InputLabel>
+        <InputLabel id="collection-select-label">Collection</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="collection-select-label"
+          id="collection-select"
           value={selectedCollection.address}
           label="Collection"
           onChange={(e) => {

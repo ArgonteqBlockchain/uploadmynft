@@ -10,7 +10,7 @@ const POLLING_INTERVAL = 12000;
 // const rpcUrl = getNodeUrl();
 const chainId = parseInt(process.env.REACT_APP_CHAIN_ID, 10);
 
-export const injected = new InjectedConnector({ supportedChainIds: [chainId] });
+export const injected = new InjectedConnector({ supportedChainIds: [chainId, 137] });
 
 export const connectorsByName: { [connectorName in ConnectorNames]: any } = {
   [ConnectorNames.Injected]: injected,

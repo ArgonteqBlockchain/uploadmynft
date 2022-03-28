@@ -12,7 +12,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useWeb3React } from '@web3-react/core';
 import { useLocation } from 'react-router';
-// import { useNavigate } from 'react-router-dom';
 import { Collection } from 'src/models/collection';
 import { useCollectionContract } from 'src/hooks/useContracts';
 import { useCallWithGasPrice } from 'src/hooks/useCallWithGasPrice';
@@ -20,7 +19,6 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { BigNumber } from 'ethers';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
 import axios from 'axios';
 
 function CreateNFT() {
@@ -43,6 +41,12 @@ function CreateNFT() {
   const [isOpen, setIsOpen] = useState(false);
   const [useraddress, setuseraddress] = useState(account);
   const [status, setstatus] = useState(false);
+  const [open, setOpen] = useState(true);
+
+  const hashHandleClose = () => {
+    setOpen(false);
+  };
+
   const collection: Collection = location.state['state'] as any;
   if (collection == null) {
     console.log('Collection is null');
@@ -97,7 +101,7 @@ function CreateNFT() {
       console.log('IPFS', ipfs);
       axios({
         method: 'POST',
-        url: `https://${process.env.REACT_APP_API}/baseurl`,
+        url: `http://${process.env.REACT_APP_API}/baseurl`,
         data: {
           baseurl: collection.baseurl,
           tokenId: tokenId,
@@ -293,10 +297,17 @@ function CreateNFT() {
                     )}
 
                     {query === 'success' ? (
-                      <Typography>
-                        <div>Transaction successful</div>
-                        <div style={{ width: '100%', wordBreak: 'break-word' }}>hash:{hash}</div>
-                      </Typography>
+                      <Dialog
+                        open={open}
+                        onClose={hashHandleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">{'Transaction Successful'}</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">{hash}</DialogContentText>
+                        </DialogContent>
+                      </Dialog>
                     ) : null}
                     <Dialog open={isOpen} onClose={handleClose}>
                       <DialogTitle>Mint To</DialogTitle>

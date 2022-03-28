@@ -1,20 +1,25 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 // import { create, Options } from 'ipfs-http-client';
-import { Container, Grid, Card, CardHeader, CardContent, Divider, Button } from '@mui/material';
+import { Container, Grid, Card, CardHeader, CardContent, Divider, Button, Tooltip } from '@mui/material';
 import generateHash from '../../../../utils/generateHash';
-
+import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { useWeb3React } from '@web3-react/core';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 import { useCallWithGasPrice } from 'src/hooks/useCallWithGasPrice';
 import { useFactoryContract } from 'src/hooks/useContracts';
 
 function CreateCollection() {
-  console.log(process.env.REACT_APP_API);
+  const titleString =
+    'Once you submit the form, you will need to confirm transaction on your MetaMask wallet. After confirmation and successfull transaction, you will be able to view your transaction hash in a popup.';
 
   const [query, setquery] = useState('free');
   const { account, active, error } = useWeb3React();
@@ -22,10 +27,14 @@ function CreateCollection() {
   const { callWithGasPrice } = useCallWithGasPrice();
   const [status, setstatus] = useState(false);
   const [hash, sethash] = useState('success');
-  // const web3=
   const [name, setname] = useState();
   // const [description, setdescription] = useState();
   const [symbol, setsymbol] = useState();
+  const [open, setOpen] = useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   // const [image, setimage] = useState();
 
   // const myOption: Options = {
@@ -154,7 +163,7 @@ function CreateCollection() {
                       onChange={onImageChange}
                     />
                   </div> */}
-                  <div>
+                  <Grid container justifyContent="center">
                     {query === 'progress' ? (
                       <Button disabled sx={{ margin: 1 }} variant="contained" onClick={handleSubmit}>
                         Submit
@@ -164,24 +173,40 @@ function CreateCollection() {
                         Submit
                       </Button>
                     )}
-                  </div>
-                  {query === 'progress' ? (
-                    <Fade
-                      in={query === 'progress'}
-                      style={{
-                        transitionDelay: query === 'progress' ? '800ms' : '0ms',
+                    {query === 'progress' ? (
+                      <Fade
+                        in={query === 'progress'}
+                        style={{
+                          transitionDelay: query === 'progress' ? '800ms' : '0ms',
+                        }}
+                        unmountOnExit
+                      >
+                        <CircularProgress />
+                      </Fade>
+                    ) : null}
+                    {query === 'success' ? (
+                      <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">{'Transaction Hash'}</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">{hash}</DialogContentText>
+                        </DialogContent>
+                      </Dialog>
+                    ) : null}
+                    <Tooltip
+                      title={titleString}
+                      arrow
+                      sx={{
+                        marginTop: '15px',
                       }}
-                      unmountOnExit
                     >
-                      <CircularProgress />
-                    </Fade>
-                  ) : null}
-                  {query === 'success' ? (
-                    <Typography>
-                      <div>Transaction successful</div>
-                      <div style={{ width: '100%', wordBreak: 'break-word' }}>hash:{hash}</div>
-                    </Typography>
-                  ) : null}
+                      <InfoIcon fontSize="small" />
+                    </Tooltip>
+                  </Grid>
                 </Box>
               </CardContent>
             </Card>
