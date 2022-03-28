@@ -1,36 +1,36 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
-export const useLocalStorage = <T>(parentItem: string, initialValue: T, useCookies = true) => {
-  let iniItem = initialValue;
-  if (useCookies) {
-    iniItem = (JSON.parse(localStorage.getItem(parentItem)) as T) || initialValue;
-  }
-
-  const [item, setMyItem] = useState(iniItem);
+export const useLocalStorage = <T>(parentItem: string, initialValue: Record<string, T>, useCookies = true) => {
+  useEffect(() => {
+    if (!useCookies) {
+      localStorage.setItem(parentItem, JSON.stringify(initialValue));
+    }
+  }, []);
 
   const getItem = useCallback(
     (key: string, defaultValue: T) => {
+      const item = JSON.parse(localStorage.getItem(parentItem));
       if (!item[key]) {
         const newItem = { ...item, [key]: defaultValue };
         localStorage.setItem(parentItem, JSON.stringify(newItem));
-        setMyItem(newItem);
         return newItem[key];
       }
       return item[key];
     },
-    [item, parentItem],
+    [parentItem],
   );
 
   const setItem = useCallback(
     (key: string, value: T) => {
+      const item = JSON.parse(localStorage.getItem(parentItem));
       const newItem = { ...item, [key]: value };
+      console.log(newItem);
       localStorage.setItem(parentItem, JSON.stringify(newItem));
-      setMyItem(newItem);
     },
-    [item, parentItem],
+    [parentItem],
   );
 
-  return { item, getItem, setItem };
+  return { getItem, setItem };
 };
 
 export default useLocalStorage;

@@ -1,7 +1,4 @@
 import { Card, Box, Grid, Typography } from '@mui/material';
-import { Collection } from 'src/models/collection';
-import { useCollections } from 'src/hooks/useCollections';
-import { useTokens } from 'src/hooks/useTokens';
 import { useWeb3React } from '@web3-react/core';
 import { useCollectionsTokens } from 'src/hooks/useCollectionsTokens';
 

@@ -60,7 +60,7 @@ function Header() {
       <Box display="flex" alignItems="center">
         <Hidden lgUp>
           <a
-            href="/"
+            href="/dashboard"
             style={{
               textDecoration: 'none',
               fontWeight: '800',

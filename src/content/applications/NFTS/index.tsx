@@ -15,7 +15,6 @@ function Nfts() {
   const collection: Collection = location.state as any;
 
   let helpers: StoreHelpers;
-
   const [tour, setTour] = useState({
     run: false,
     steps: [

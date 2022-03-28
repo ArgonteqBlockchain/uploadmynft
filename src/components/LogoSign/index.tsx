@@ -73,7 +73,7 @@ const LogoSignInner = styled(Box)(
 function Logo() {
   return (
     <Tooltip title="Upload My NFT" arrow>
-      <LogoWrapper to="/">
+      <LogoWrapper to="/dashboard">
         <LogoSignWrapper>
           <LogoSign>
             <LogoSignInner />

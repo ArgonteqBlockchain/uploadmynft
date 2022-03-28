@@ -188,7 +188,7 @@ const reduceChildRoutes = ({
       />,
     );
   }
-
+  console.log(ev);
   return ev;
 };
 

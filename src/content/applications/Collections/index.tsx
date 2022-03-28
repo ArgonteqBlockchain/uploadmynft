@@ -6,12 +6,16 @@ import Joyride, { CallBackProps, STATUS, Step, StoreHelpers } from 'react-joyrid
 
 import Footer from 'src/components/Footer';
 import RecentCollections from './CollectionComponents/RecentCollections';
+import useLocalStorage from 'src/hooks/useLocalStorage';
 
 function Collections() {
   let helpers: StoreHelpers;
 
+  const { getItem, setItem } = useLocalStorage('showOnCollection', { show: false }, true);
+  console.log(getItem('show', false));
+
   const [tour, setTour] = useState({
-    run: false,
+    run: getItem('show', false),
     steps: [
       {
         content: (
@@ -86,6 +90,7 @@ function Collections() {
         ...tour,
         run: false,
       });
+      setItem('show', false);
     }
   };
 

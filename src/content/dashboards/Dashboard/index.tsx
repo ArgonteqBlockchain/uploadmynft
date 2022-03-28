@@ -6,10 +6,12 @@ import Joyride, { CallBackProps, STATUS, Step, StoreHelpers } from 'react-joyrid
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import CollectionOverview from './CollectionOverview';
 import NFTDistribution from './NFTDistribution';
+import useLocalStorage from 'src/hooks/useLocalStorage';
 
 function Dashboard() {
   let helpers: StoreHelpers;
 
+  const { setItem } = useLocalStorage('showOnCollection', { show: false, showLeft: false }, false);
   const [tour, setTour] = useState({
     run: false,
     steps: [
@@ -58,18 +60,31 @@ function Dashboard() {
         ),
         spotlightPadding: 20,
         target: '#collection-select',
+        placement: 'left',
+      },
+      {
+        content: (
+          <>
+            <h2>Welcome to Upload My NFT!</h2>
+            <p>Please connect your meta mask wallet using the "Connect Wallet" button.</p>
+            <p>NOTE: The button will show your wallet address if it is already connected.</p>
+          </>
+        ),
+        locale: { skip: <strong aria-label="skip">SKIP</strong> },
         placement: 'right',
+        target: '#sidebar-Collections',
       },
     ] as Step[],
   });
 
   const handleClickHelp = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-
     setTour({
       ...tour,
       run: true,
     });
+    console.log('Setting Item');
+    setItem('show', true);
+    e.preventDefault();
   };
 
   const getHelpers = (_helpers: StoreHelpers) => {
@@ -86,6 +101,11 @@ function Dashboard() {
         run: false,
       });
     }
+    if (status === STATUS.FINISHED) {
+      console.log('Completed');
+      setItem('showLeft', true);
+    }
+    console.log(data);
   };
 
   return (

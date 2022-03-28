@@ -39,8 +39,9 @@ const SidebarMenuItem: FC<SidebarMenuItemProps> = ({
 
   if (children) {
     return (
-      <ListItem component="div" className="Mui-children" key={name} {...rest}>
+      <ListItem component="div" className={'Mui-children'} key={name} {...rest}>
         <Button
+          id={'sidebar-' + name}
           className={clsx({ 'Mui-active': menuToggle })}
           startIcon={Icon && <Icon />}
           endIcon={menuToggle ? <ExpandLessTwoToneIcon /> : <ExpandMoreTwoToneIcon />}
@@ -56,6 +57,7 @@ const SidebarMenuItem: FC<SidebarMenuItemProps> = ({
   return (
     <ListItem component="div" key={name} {...rest}>
       <Button
+        id={'sidebar-' + name}
         activeClassName="Mui-active"
         component={RouterLink}
         onClick={toggleSidebar}

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import routes from './router';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -9,7 +10,6 @@ import ThemeProvider from './theme/ThemeProvider';
 
 const App = () => {
   const content = useRoutes(routes);
-
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <ThemeProvider>

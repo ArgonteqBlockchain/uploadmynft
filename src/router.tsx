@@ -53,15 +53,23 @@ const StatusMaintenance = Loader(lazy(() => import('src/content/pages/Status/Mai
 
 const routes: PartialRouteObject[] = [
   {
-    path: '*',
+    path: '/',
     element: <BaseLayout />,
     children: [
       {
         path: '/',
-        element: <SidebarLayout />,
+        element: (
+          <>
+            <SidebarLayout />
+          </>
+        ),
         children: [
           {
             path: '/',
+            element: <Dashboard />,
+          },
+          {
+            path: '/dashboard',
             element: <Dashboard />,
           },
           {

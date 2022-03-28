@@ -21,7 +21,7 @@ const LogoText = styled(Box)(
 
 function Logo() {
   return (
-    <LogoWrapper to="/">
+    <LogoWrapper to="/dashboard">
       <Hidden smDown>
         <LogoText sx={{ marginLeft: '30px' }}>Upload My NFT</LogoText>
       </Hidden>
