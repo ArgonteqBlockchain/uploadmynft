@@ -62,13 +62,11 @@ const RecentCollectionsTable: FC<RecentCollectionsTableProps> = ({ collections }
               <TableCell>Name</TableCell>
               <TableCell align="right">Symbol</TableCell>
               <TableCell align="right">Address</TableCell>
-              <TableCell align="right" id="manageNFT">
-                Actions
-              </TableCell>
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCollections.map((collection) => {
+            {paginatedCollections.map((collection, index) => {
               return (
                 <TableRow hover key={collection.address}>
                   <TableCell>
@@ -89,6 +87,7 @@ const RecentCollectionsTable: FC<RecentCollectionsTableProps> = ({ collections }
                   <TableCell align="right">
                     <Tooltip title="Manage NFT" arrow>
                       <IconButton
+                        id={'manageNFT-' + index}
                         sx={{
                           '&:hover': {
                             background: theme.colors.primary.lighter,

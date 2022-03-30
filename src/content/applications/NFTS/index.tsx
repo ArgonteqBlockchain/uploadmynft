@@ -1,13 +1,14 @@
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import React, { useState } from 'react';
-import Joyride, { CallBackProps, STATUS, Step, StoreHelpers } from 'react-joyride';
+import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
 import { Grid, Container, Button, Typography } from '@mui/material';
 import Footer from 'src/components/Footer';
 import RecentNFT from './NFTComponents/RecentNFTs';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Collection } from 'src/models/collection';
+import { nftSteps } from 'src/constants/steps';
 
 function Nfts() {
   const location = useLocation();
@@ -17,56 +18,7 @@ function Nfts() {
   let helpers: StoreHelpers;
   const [tour, setTour] = useState({
     run: false,
-    steps: [
-      {
-        content: (
-          <>
-            <h2>NFTs Page</h2>
-            <p>You can view all your created NFTs here.</p>
-            <p>NOTE: All the NFT showen here will be against your currently connected wallet.</p>
-          </>
-        ),
-        locale: { skip: <strong aria-label="skip">SKIP</strong> },
-        placement: 'center',
-        target: 'body',
-      },
-      {
-        content: (
-          <>
-            <h2>NFT Table</h2>
-            <p>This table will show your Token ID, name, image and image address.</p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#nftTable',
-      },
-      {
-        content: (
-          <>
-            <h2>Collection Actions</h2>
-            <p>
-              This column includes manage NFT button which will redirect you to all of the NFTs for{' '}
-              <b>this collection</b>.
-            </p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#manageNFT',
-        placement: 'left',
-      },
-      {
-        content: (
-          <>
-            <h2>Create NFT</h2>
-            <p>You can create more NFTs by clicking on this button and following the process after that.</p>
-            <p>This button will redirect you to a new page where you will have to add NFT details.</p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#createNFT',
-        placement: 'right',
-      },
-    ] as Step[],
+    steps: nftSteps,
   });
 
   const getHelpers = (_helpers: StoreHelpers) => {

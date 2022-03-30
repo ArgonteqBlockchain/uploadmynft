@@ -2,79 +2,26 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Footer from 'src/components/Footer';
 import { Container, Typography, Grid, Button } from '@mui/material';
-import Joyride, { CallBackProps, STATUS, Step, StoreHelpers } from 'react-joyride';
+import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import CollectionOverview from './CollectionOverview';
 import NFTDistribution from './NFTDistribution';
 import useLocalStorage from 'src/hooks/useLocalStorage';
+import { dashboardSteps } from 'src/constants/steps';
 
 function Dashboard() {
   let helpers: StoreHelpers;
 
   const { setItem } = useLocalStorage('showOnCollection', { show: false, showLeft: false }, false);
+  let firstTime = true;
+  if (localStorage.getItem('firstTime')) {
+    firstTime = false;
+    localStorage.setItem('firstTime', '{}');
+  }
+
   const [tour, setTour] = useState({
-    run: false,
-    steps: [
-      {
-        content: (
-          <>
-            <h2>Welcome to Upload My NFT!</h2>
-            <p>Please connect your meta mask wallet using the "Connect Wallet" button.</p>
-            <p>NOTE: The button will show your wallet address if it is already connected.</p>
-          </>
-        ),
-        locale: { skip: <strong aria-label="skip">SKIP</strong> },
-        placement: 'center',
-        target: 'body',
-      },
-      {
-        content: (
-          <>
-            <h2>Collection Overview</h2>
-            <p>Your collection statistics will show here.</p>
-            <p>Total NFTs Minted shows the count of all the NFTs minted through the connected wallet address.</p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#collectionOverview',
-      },
-      {
-        content: (
-          <>
-            <h2>NFT Distribution</h2>
-            <p>Your collection statistics will show here.</p>
-            <p>Total NFTs Minted shows the count of all the NFTs minted through the connected wallet address.</p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#nftDistribution',
-        placement: 'left',
-      },
-      {
-        content: (
-          <>
-            <h2>Select Collection</h2>
-            <p>Select collection from this dropdown menu to see its info in the chart below.</p>
-            <p>This menu will have all the collection you created using your wallet address.</p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#collection-select',
-        placement: 'left',
-      },
-      {
-        content: (
-          <>
-            <h2>Welcome to Upload My NFT!</h2>
-            <p>Please connect your meta mask wallet using the "Connect Wallet" button.</p>
-            <p>NOTE: The button will show your wallet address if it is already connected.</p>
-          </>
-        ),
-        locale: { skip: <strong aria-label="skip">SKIP</strong> },
-        placement: 'right',
-        target: '#sidebar-Collections',
-      },
-    ] as Step[],
+    run: firstTime,
+    steps: dashboardSteps,
   });
 
   const handleClickHelp = (e: React.MouseEvent<HTMLElement>) => {
@@ -104,6 +51,10 @@ function Dashboard() {
     if (status === STATUS.FINISHED) {
       console.log('Completed');
       setItem('showLeft', true);
+      localStorage.setItem('firstTime', '{}');
+    }
+    if (status === STATUS.SKIPPED) {
+      localStorage.setItem('firstTime', '{}');
     }
     console.log(data);
   };

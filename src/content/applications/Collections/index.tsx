@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container, Typography, Button } from '@mui/material';
-import Joyride, { CallBackProps, STATUS, Step, StoreHelpers } from 'react-joyride';
-
+import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
+import { collectionStepsInitial, collectionStepsFinal } from 'src/constants/steps';
 import Footer from 'src/components/Footer';
 import RecentCollections from './CollectionComponents/RecentCollections';
 import useLocalStorage from 'src/hooks/useLocalStorage';
@@ -11,61 +11,11 @@ import useLocalStorage from 'src/hooks/useLocalStorage';
 function Collections() {
   let helpers: StoreHelpers;
 
-  const { getItem, setItem } = useLocalStorage('showOnCollection', { show: false }, true);
-  console.log(getItem('show', false));
+  const { getItem, setItem } = useLocalStorage('showOnCollection', { show: false, onCollectionCreate: false }, true);
 
   const [tour, setTour] = useState({
     run: getItem('show', false),
-    steps: [
-      {
-        content: (
-          <>
-            <h2>Collections Page!</h2>
-            <p>You can view all your created collections here.</p>
-            <p>NOTE: All the collections showen here will be against your currently connected wallet.</p>
-          </>
-        ),
-        locale: { skip: <strong aria-label="skip">SKIP</strong> },
-        placement: 'center',
-        target: 'body',
-      },
-      {
-        content: (
-          <>
-            <h2>Collection Table</h2>
-            <p>This table will show your collection name, symbol and address.</p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#collectionTable',
-      },
-      {
-        content: (
-          <>
-            <h2>Collection Actions</h2>
-            <p>
-              This column includes manage NFT button which will redirect you to all of the NFTs for{' '}
-              <b>this collection</b>.
-            </p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#manageNFT',
-        placement: 'left',
-      },
-      {
-        content: (
-          <>
-            <h2>Create Collection</h2>
-            <p>You can create more collections by clicking on this button and following the process after that.</p>
-            <p>This button will redirect you to a new page where you will have to add collection details.</p>
-          </>
-        ),
-        spotlightPadding: 20,
-        target: '#createCollection',
-        placement: 'right',
-      },
-    ] as Step[],
+    steps: getItem('onCollectionCreate', false) ? collectionStepsFinal : collectionStepsInitial,
   });
 
   const getHelpers = (_helpers: StoreHelpers) => {
@@ -90,7 +40,16 @@ function Collections() {
         ...tour,
         run: false,
       });
+    }
+    if (status === STATUS.FINISHED) {
+      if (getItem('onCollectionCreate', false)) {
+        setItem('show', false);
+        setItem('onCollectionCreate', false);
+      }
+    }
+    if (status === STATUS.SKIPPED) {
       setItem('show', false);
+      setItem('onCollectionCreate', false);
     }
   };
 

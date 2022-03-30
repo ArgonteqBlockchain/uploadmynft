@@ -34,9 +34,9 @@ function CreateNFT() {
   const { account } = useWeb3React();
   const [query, setquery] = useState('free');
   const [hash, sethash] = useState('success');
-  const [name, setname] = useState();
-  const [description, setdescription] = useState();
-  const [image, setimage] = useState();
+  const [name, setname] = useState('');
+  const [description, setdescription] = useState('');
+  const [image, setimage] = useState(null);
   const [attributes, setAttributes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [useraddress, setuseraddress] = useState(account);
@@ -211,128 +211,138 @@ function CreateNFT() {
               <CardHeader title={`Add NFT for "${collection.name}"`} />
               <Divider />
               <CardContent>
-                <Box
-                  component="form"
-                  sx={{
-                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <div>
-                    <TextField
-                      style={{ width: '94%' }}
-                      required
-                      id="outlined-required"
-                      label="Name"
-                      placeholder="Name"
-                      onChange={onNameChange}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      style={{ width: '94%' }}
-                      id="outlined-textarea"
-                      label="Description"
-                      placeholder="Description"
-                      multiline
-                      onChange={onDescriptionChange}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      required
-                      style={{ width: '94%' }}
-                      type="file"
-                      id="outlined-required"
-                      label="Media"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      onChange={onImageChange}
-                    />
-                  </div>
-                  <div>
-                    <NFTView attributes={attributes} setAttributes={setAttributes as any} />
-                  </div>
-                  <div
-                    style={{
-                      marginLeft: '40%',
+                <form>
+                  <Box
+                    sx={{
+                      '& .MuiTextField-root': { m: 1, width: '25ch' },
                     }}
                   >
-                    {query == 'progress' ? (
-                      <Fade
-                        in={query === 'progress'}
-                        style={{
-                          transitionDelay: query === 'progress' ? '800ms' : '0ms',
+                    <div>
+                      <TextField
+                        style={{ width: '94%' }}
+                        required
+                        id="outlined-required"
+                        label="Name"
+                        placeholder="Name"
+                        onChange={onNameChange}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        style={{ width: '94%' }}
+                        id="outlined-textarea"
+                        label="Description"
+                        placeholder="Description"
+                        multiline
+                        onChange={onDescriptionChange}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        required
+                        style={{ width: '94%' }}
+                        type="file"
+                        id="outlined-required"
+                        label="Media"
+                        InputLabelProps={{
+                          shrink: true,
                         }}
-                        unmountOnExit
-                      >
-                        <CircularProgress />
-                      </Fade>
-                    ) : null}
-                  </div>
-                  <div
-                    style={{
-                      textAlign: 'center',
-                    }}
-                  >
-                    {query == 'progress' ? (
-                      <Button disabled sx={{ margin: 2 }} variant="contained" onClick={(e) => handleSubmitMint(e)}>
-                        Mint
-                      </Button>
-                    ) : (
-                      <Button sx={{ margin: 2 }} variant="contained" onClick={(e) => handleSubmitMint(e)}>
-                        Mint
-                      </Button>
-                    )}
-                    {query == 'progress' ? (
-                      <Button disabled sx={{ margin: 2 }} variant="contained" onClick={handleClickOpen}>
-                        Mint To
-                      </Button>
-                    ) : (
-                      <Button sx={{ margin: 2 }} variant="contained" onClick={handleClickOpen}>
-                        Mint To
-                      </Button>
-                    )}
+                        onChange={onImageChange}
+                      />
+                    </div>
+                    <div>
+                      <NFTView attributes={attributes} setAttributes={setAttributes as any} />
+                    </div>
+                    <div
+                      style={{
+                        marginLeft: '40%',
+                      }}
+                    >
+                      {query == 'progress' ? (
+                        <Fade
+                          in={query === 'progress'}
+                          style={{
+                            transitionDelay: query === 'progress' ? '800ms' : '0ms',
+                          }}
+                          unmountOnExit
+                        >
+                          <CircularProgress />
+                        </Fade>
+                      ) : null}
+                    </div>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                      }}
+                    >
+                      {query == 'progress' ? (
+                        <Button disabled sx={{ margin: 2 }} variant="contained">
+                          Mint
+                        </Button>
+                      ) : (
+                        <Button
+                          sx={{ margin: 2 }}
+                          variant="contained"
+                          disabled={name.length <= 0 && image == null ? true : false}
+                          onClick={handleSubmitMint}
+                        >
+                          Mint
+                        </Button>
+                      )}
+                      {query == 'progress' ? (
+                        <Button disabled sx={{ margin: 2 }} variant="contained">
+                          Mint To
+                        </Button>
+                      ) : (
+                        <Button
+                          sx={{ margin: 2 }}
+                          disabled={name.length <= 0 && image == null ? true : false}
+                          variant="contained"
+                          type="submit"
+                          onClick={handleClickOpen}
+                        >
+                          Mint To
+                        </Button>
+                      )}
 
-                    {query === 'success' ? (
-                      <Dialog
-                        open={open}
-                        onClose={hashHandleClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">{'Transaction Successful'}</DialogTitle>
+                      {query === 'success' ? (
+                        <Dialog
+                          open={open}
+                          onClose={hashHandleClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">{'Transaction Successful'}</DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">{hash}</DialogContentText>
+                          </DialogContent>
+                        </Dialog>
+                      ) : null}
+                      <Dialog open={isOpen} onClose={handleClose}>
+                        <DialogTitle>Mint To</DialogTitle>
                         <DialogContent>
-                          <DialogContentText id="alert-dialog-description">{hash}</DialogContentText>
+                          <DialogContentText>
+                            Please enter wallet address of the user you want to mint this NFT to.
+                          </DialogContentText>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Address"
+                            type="string"
+                            fullWidth
+                            variant="standard"
+                            onChange={onAddressChange}
+                          />
                         </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose}>Cancel</Button>
+                          <Button onClick={handleSubmitMintTo}>Mint</Button>
+                        </DialogActions>
                       </Dialog>
-                    ) : null}
-                    <Dialog open={isOpen} onClose={handleClose}>
-                      <DialogTitle>Mint To</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Please enter wallet address of the user you want to mint this NFT to.
-                        </DialogContentText>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="name"
-                          label="Address"
-                          type="string"
-                          fullWidth
-                          variant="standard"
-                          onChange={onAddressChange}
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={handleSubmitMintTo}>Mint</Button>
-                      </DialogActions>
-                    </Dialog>
-                  </div>
-                </Box>
+                    </div>
+                  </Box>
+                </form>
               </CardContent>
             </Card>
           </Grid>
