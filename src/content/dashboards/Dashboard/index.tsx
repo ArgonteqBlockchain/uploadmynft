@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Footer from 'src/components/Footer';
-import { Container, Typography, Grid, Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Container, Typography, Grid, Button, Card, Box } from '@mui/material';
 import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import CollectionOverview from './CollectionOverview';
@@ -18,6 +19,28 @@ function Dashboard() {
     firstTime = false;
     localStorage.setItem('firstTime', '{}');
   }
+
+  const Note = styled('div')(({ theme }) => ({
+    display: 'flex',
+    [theme.breakpoints.down('md')]: {
+      flexDirection: 'column',
+    },
+    [theme.breakpoints.up('md')]: {
+      flexDirection: 'row',
+    },
+  }));
+
+  const NoteList = styled('div')(({ theme }) => ({
+    display: 'flex',
+    [theme.breakpoints.down('md')]: {
+      marginTop: '20px',
+      marginLeft: '20px',
+      flexDirection: 'column',
+    },
+    [theme.breakpoints.up('md')]: {
+      flexDirection: 'row',
+    },
+  }));
 
   const [tour, setTour] = useState({
     run: firstTime,
@@ -94,7 +117,73 @@ function Dashboard() {
             Help
           </Button>
         </div>
+        <Note>
+          <Typography
+            sx={{
+              marginTop: '8px',
+              marginLeft: '10px',
+              marginRight: '-10px',
+            }}
+            variant="h4"
+          >
+            NOTE :
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              marginTop: '-10px',
+              marginLeft: '0px',
+            }}
+          >
+            <NoteList>
+              <li
+                style={{
+                  marginRight: '20px',
+                }}
+              >
+                We are NOT KYC.
+              </li>
+              <li
+                style={{
+                  marginRight: '20px',
+                }}
+              >
+                You set your royalties percentage.
+              </li>
+              <li
+                style={{
+                  marginRight: '20px',
+                }}
+              >
+                We mint your NFT direct to your wallet!
+              </li>
+            </NoteList>
+          </Typography>
+        </Note>
       </PageTitleWrapper>
+      <Container
+        sx={{
+          display: 'none',
+        }}
+        maxWidth="xs"
+      >
+        <Card sx={{ p: 2.5, mb: 4 }}>
+          <Box display="flex" alignItems="center">
+            <Box sx={{ ml: 1.5 }}>
+              <Typography variant="h4" noWrap gutterBottom>
+                NOTE
+              </Typography>
+              <Typography variant="subtitle2" marginTop="10px" marginLeft="5px">
+                <ul>
+                  <li>We are NOT KYC.</li>
+                  <li>You set your royalties percentage.</li>
+                  <li>We mint your NFT direct to your wallet!</li>
+                </ul>
+              </Typography>
+            </Box>
+          </Box>
+        </Card>
+      </Container>
       <Container maxWidth="lg">
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
           <Grid item xs={12}>
