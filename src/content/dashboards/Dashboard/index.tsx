@@ -30,14 +30,16 @@ function Dashboard() {
     },
   }));
 
-  const NoteList = styled('div')(({ theme }) => ({
+  const NoteList = styled('ul')(({ theme }) => ({
     display: 'flex',
     [theme.breakpoints.down('md')]: {
       marginTop: '20px',
       marginLeft: '20px',
       flexDirection: 'column',
     },
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
+      marginTop: '18px',
+      marginLeft: '0',
       flexDirection: 'row',
     },
   }));
