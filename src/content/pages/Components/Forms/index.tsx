@@ -37,7 +37,7 @@ function Forms() {
   async function handleSubmit(e) {
     e.preventDefault();
     const UploadImage = await ipfs.add(image);
-    let linked = 'https://ipfs.infura.io/ipfs/' + UploadImage.path;
+    let linked = 'https://ipfs.io/ipfs/' + UploadImage.path;
     console.log(name, description, symbol, linked);
   }
   return (

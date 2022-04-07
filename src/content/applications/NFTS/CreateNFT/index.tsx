@@ -142,7 +142,7 @@ function CreateNFT() {
     e.preventDefault();
     setquery('progress');
     const UploadImage = await ipfs.add(image);
-    let linked = 'https://ipfs.infura.io/ipfs/' + UploadImage.path;
+    let linked = 'https://ipfs.io/ipfs/' + UploadImage.path;
     const obj = {
       name: name,
       description: description,
@@ -151,7 +151,7 @@ function CreateNFT() {
     };
     const data = JSON.stringify(obj);
     const UploadData = await ipfs.add(data);
-    let linkedData = 'https://ipfs.infura.io/ipfs/' + UploadData.path;
+    let linkedData = 'https://ipfs.io/ipfs/' + UploadData.path;
     const has = await mint(linkedData);
     sethash(has);
     setquery('success');
@@ -161,7 +161,7 @@ function CreateNFT() {
     e.preventDefault();
     setquery('progress');
     const UploadImage = await ipfs.add(image);
-    let linked = 'https://ipfs.infura.io/ipfs/' + UploadImage.path;
+    let linked = 'https://ipfs.io/ipfs/' + UploadImage.path;
     const obj = {
       name: name,
       description: description,
@@ -170,7 +170,7 @@ function CreateNFT() {
     };
     const data = JSON.stringify(obj);
     const UploadData = await ipfs.add(data);
-    let linkedData = 'https://ipfs.infura.io/ipfs/' + UploadData.path;
+    let linkedData = 'https://ipfs.io/ipfs/' + UploadData.path;
 
     const has = await mintTo(useraddress, linkedData);
     sethash(has);
