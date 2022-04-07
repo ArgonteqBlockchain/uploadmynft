@@ -64,7 +64,7 @@ function CreateCollection() {
     if (active && !error) {
       const baseURL = generateHash(name, symbol, account);
       const serverAddr = process.env.REACT_APP_API;
-      const uri = serverAddr + '/' + baseURL + '/';
+      const uri = 'https://' + serverAddr + '/' + baseURL + '/';
       console.log(baseURL);
       //  calling contract
       const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri]);
