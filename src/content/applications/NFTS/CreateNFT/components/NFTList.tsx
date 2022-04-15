@@ -21,7 +21,7 @@ const NFTList = (props: any) => {
     props.nftDetails[props.current].value = Value;
 
     return (
-      <div className="form-row" key={val.index}>
+      <div className="form-row" key={trait_type}>
         <div>
           <TextField
             id={trait_type}

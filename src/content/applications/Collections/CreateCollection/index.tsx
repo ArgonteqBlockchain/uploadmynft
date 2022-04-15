@@ -1,12 +1,22 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Grid, Card, CardHeader, CardContent, Divider, Button, Tooltip, InputLabel } from '@mui/material';
+import {
+  Container,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+  Button,
+  Tooltip,
+  TextField,
+  InputLabel,
+} from '@mui/material';
 import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
 import generateHash from '../../../../utils/generateHash';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import { useWeb3React } from '@web3-react/core';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -20,7 +30,7 @@ import { useFactoryContract } from 'src/hooks/useContracts';
 import useLocalStorage from 'src/hooks/useLocalStorage';
 
 function CreateCollection() {
-  const { getItem, setItem } = useLocalStorage('showOnCollection', { show: false, onCollectionCreate: false }, true);
+  const { getItem, setItem } = useLocalStorage('showOnCollection', { show: true, onCollectionCreate: false }, true);
   const navigate = useNavigate();
   let helpers: StoreHelpers;
 
@@ -40,12 +50,20 @@ function CreateCollection() {
   const [hash, sethash] = useState('success');
   const [name, setname] = useState();
   const [symbol, setsymbol] = useState();
+  const [royalty, setRoyalty] = useState(0);
+  const [description, setdescription] = useState('');
+  const [image, setImage] = useState(null);
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
     navigate('/content/collections', { replace: true });
   };
+
+  function onRoyaltyChange(e: any) {
+    setRoyalty(e.target.value * 100);
+    setstatus(true);
+  }
 
   function onNameChange(e) {
     setname(e.target.value);
@@ -60,19 +78,19 @@ function CreateCollection() {
   async function handleSubmit(e) {
     e.preventDefault();
     setquery('progress');
-    console.log(name, symbol);
+    // console.log(name, symbol);
     if (active && !error) {
       const baseURL = generateHash(name, symbol, account);
       const serverAddr = process.env.REACT_APP_API;
       const uri = 'https://' + serverAddr + '/' + baseURL + '/';
-      console.log(baseURL);
+      // console.log(baseURL);
       //  calling contract
       const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri]);
       const result = await tx.wait();
       sethash(result.transactionHash);
       setquery('success');
       setItem('onCollectionCreate', true);
-      console.log('Crete collection clincked');
+      // console.log('Crete collection clincked');
       setstatus(false);
     }
   }
@@ -129,11 +147,7 @@ function CreateCollection() {
           }}
         >
           <Grid item xs={12}>
-            <Card
-              sx={{
-                textAlign: 'center',
-              }}
-            >
+            <Card>
               <CardHeader title="Add Collection" />
               <Divider />
               <CardContent>
@@ -144,32 +158,28 @@ function CreateCollection() {
                     }}
                   >
                     <div
+                      id="collection-name"
                       style={{
-                        width: 'fit-content',
-                        margin: '0 auto',
+                        textAlign: 'left',
+                        marginLeft: '10px',
                       }}
                     >
-                      <div
-                        id="collection-name"
-                        style={{
-                          textAlign: 'left',
-                          marginLeft: '10px',
+                      <InputLabel
+                        htmlFor="name"
+                        color="primary"
+                        focused
+                        margin="dense"
+                        required
+                        sx={{
+                          fontWeight: 'bold',
                         }}
                       >
-                        <InputLabel
-                          htmlFor="name"
-                          color="primary"
-                          focused
-                          margin="dense"
-                          required
-                          sx={{
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          Collection Name
-                        </InputLabel>
-                      </div>
+                        Collection Name
+                      </InputLabel>
+                    </div>
+                    <div>
                       <TextField
+                        style={{ width: '94%' }}
                         required
                         id="outlined-required"
                         placeholder="e.g. MyCollection"
@@ -179,30 +189,98 @@ function CreateCollection() {
                     <div
                       id="collection-symbol"
                       style={{
-                        width: 'fit-content',
-                        margin: '0 auto',
+                        textAlign: 'left',
+                        marginLeft: '10px',
                       }}
                     >
-                      <div
-                        style={{
-                          textAlign: 'left',
-                          marginLeft: '10px',
+                      <InputLabel
+                        htmlFor="name"
+                        color="primary"
+                        focused
+                        margin="dense"
+                        required
+                        sx={{
+                          fontWeight: 'bold',
                         }}
                       >
-                        <InputLabel
-                          htmlFor="name"
-                          color="primary"
-                          focused
-                          margin="dense"
-                          required
-                          sx={{
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          Collection Symbol
-                        </InputLabel>
-                      </div>
-                      <TextField required id="outlined-required" placeholder="e.g. MYC" onChange={onSymbolChange} />
+                        Collection Symbol
+                      </InputLabel>
+                    </div>
+                    <div>
+                      <TextField
+                        style={{ width: '94%' }}
+                        id="outlined-required"
+                        placeholder="e.g. MYC"
+                        onChange={onSymbolChange}
+                      />
+                    </div>
+                    <div
+                      id="collection-description"
+                      style={{
+                        textAlign: 'left',
+                        marginLeft: '10px',
+                      }}
+                    >
+                      <InputLabel
+                        htmlFor="name"
+                        color="primary"
+                        focused
+                        margin="dense"
+                        required
+                        sx={{
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Collection Description
+                      </InputLabel>
+                    </div>
+                    <div>
+                      <TextField
+                        style={{ width: '94%' }}
+                        required
+                        multiline
+                        id="outlined-required"
+                        placeholder="Description"
+                        onChange={onNameChange}
+                      />
+                    </div>
+                    <div
+                      id="collection-royalty"
+                      style={{
+                        textAlign: 'left',
+                        marginLeft: '10px',
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}
+                    >
+                      <InputLabel
+                        htmlFor="royalty"
+                        color="primary"
+                        focused
+                        required
+                        margin="dense"
+                        sx={{
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Add Royalty
+                      </InputLabel>
+                    </div>
+                    <div>
+                      <TextField
+                        style={{ width: '94%' }}
+                        id="outlined-textarea"
+                        type="number"
+                        placeholder="e.g. 2.5"
+                        InputProps={{
+                          inputProps: {
+                            max: 8,
+                            min: 0,
+                            step: 0.1,
+                          },
+                        }}
+                        onChange={onRoyaltyChange}
+                      />
                     </div>
                     <Grid container justifyContent="center">
                       {query === 'progress' ? (

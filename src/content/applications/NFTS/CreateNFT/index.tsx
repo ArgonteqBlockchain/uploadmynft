@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { create, Options } from 'ipfs-http-client';
-import { Container, Grid, Card, CardHeader, CardContent, Divider, Button } from '@mui/material';
+import { Container, Grid, Card, CardHeader, CardContent, Divider, Button, InputLabel } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import NFTView from './components/NFTView';
@@ -32,27 +32,25 @@ function CreateNFT() {
   }
 
   const { account } = useWeb3React();
-  const [query, setquery] = useState('free');
-  const [hash, sethash] = useState('success');
-  const [name, setname] = useState('');
+  const [query, setQuery] = useState('free');
+  const [hash, setHash] = useState('success');
+  const [name, setName] = useState('');
   const [description, setdescription] = useState('');
-  const [image, setimage] = useState(null);
+  const [image, setImage] = useState(null);
+  const [object, setObject] = useState(null);
   const [attributes, setAttributes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [useraddress, setuseraddress] = useState(account);
   const [status, setstatus] = useState(false);
   const [open, setOpen] = useState(true);
-
-  const hashHandleClose = () => {
-    setOpen(false);
-  };
-
   const collection: Collection = location.state['state'] as any;
-  if (collection == null) {
-    console.log('Collection is null');
-  }
   const collectionContract = useCollectionContract(collection.address);
   const { callWithGasPrice } = useCallWithGasPrice();
+
+  enum UploadType {
+    Image,
+    Object,
+  }
 
   const myOption: Options = {
     host: 'ipfs.infura.io',
@@ -61,13 +59,23 @@ function CreateNFT() {
     apiPath: '/api/v0',
     url: 'https://ipfs.infura.io:5001',
   };
+
   const ipfs = create(myOption);
+
+  const hashHandleClose = () => {
+    setOpen(false);
+  };
+
+  if (collection == null) {
+    console.log('Collection is null');
+  }
 
   function onAddressChange(e: any) {
     setuseraddress(e.target.value);
   }
+
   function onNameChange(e: any) {
-    setname(e.target.value);
+    setName(e.target.value);
     setstatus(true);
   }
 
@@ -76,9 +84,10 @@ function CreateNFT() {
     setstatus(true);
   }
 
-  function onImageChange(e: any) {
+  function onUploadChange(e: any, type: UploadType) {
     if (e.target.files && e.target.files.length > 0) {
-      setimage(e.target.files[0]);
+      if (type === UploadType.Image) setImage(e.target.files[0]);
+      else if (type === UploadType.Object) setObject(e.target.files[0]);
     }
     setstatus(true);
   }
@@ -112,7 +121,7 @@ function CreateNFT() {
           console.log('Done');
         })
         .catch(function (error) {
-          console.log('UNable to post', error);
+          console.log('Unable to post', error);
         });
     }
   }
@@ -140,26 +149,34 @@ function CreateNFT() {
 
   async function handleSubmitMint(e: any) {
     e.preventDefault();
-    setquery('progress');
-    const UploadImage = await ipfs.add(image);
-    let linked = 'https://ipfs.io/ipfs/' + UploadImage.path;
+    setQuery('progress');
+    const uploadImage = await ipfs.add(image);
+    let uploadObject = null;
+    let imageLink = 'https://ipfs.io/ipfs/' + uploadImage.path;
+
     const obj = {
       name: name,
       description: description,
-      image: linked,
+      image: imageLink,
       attributes: attributes,
     };
+
+    if (object != null) {
+      uploadObject = await ipfs.add(object);
+      obj['animation_url'] = 'https://ipfs.io/ipfs/' + uploadObject.path;
+    }
+
     const data = JSON.stringify(obj);
     const UploadData = await ipfs.add(data);
     let linkedData = 'https://ipfs.io/ipfs/' + UploadData.path;
     const has = await mint(linkedData);
-    sethash(has);
-    setquery('success');
+    setHash(has);
+    setQuery('success');
   }
 
   async function handleSubmitMintTo(e: any) {
     e.preventDefault();
-    setquery('progress');
+    setQuery('progress');
     const UploadImage = await ipfs.add(image);
     let linked = 'https://ipfs.io/ipfs/' + UploadImage.path;
     const obj = {
@@ -173,8 +190,8 @@ function CreateNFT() {
     let linkedData = 'https://ipfs.io/ipfs/' + UploadData.path;
 
     const has = await mintTo(useraddress, linkedData);
-    sethash(has);
-    setquery('success');
+    setHash(has);
+    setQuery('success');
     setstatus(false);
     setIsOpen(false);
   }
@@ -186,6 +203,7 @@ function CreateNFT() {
   const handleClose = () => {
     setIsOpen(false);
   };
+
   const unloadPage = () => {
     if (status) {
       return 'You have unsaved changes on this page.';
@@ -193,6 +211,7 @@ function CreateNFT() {
   };
 
   window.onbeforeunload = unloadPage;
+
   return (
     <>
       <Helmet>
@@ -217,25 +236,85 @@ function CreateNFT() {
                       '& .MuiTextField-root': { m: 1, width: '25ch' },
                     }}
                   >
+                    <div
+                      id="name"
+                      style={{
+                        textAlign: 'left',
+                        marginLeft: '10px',
+                      }}
+                    >
+                      <InputLabel
+                        htmlFor="name"
+                        color="primary"
+                        focused
+                        margin="dense"
+                        required
+                        sx={{
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        NFT Name
+                      </InputLabel>
+                    </div>
                     <div>
                       <TextField
                         style={{ width: '94%' }}
                         required
                         id="outlined-required"
-                        label="Name"
                         placeholder="Name"
                         onChange={onNameChange}
                       />
+                    </div>
+
+                    <div
+                      id="description"
+                      style={{
+                        textAlign: 'left',
+                        marginLeft: '10px',
+                      }}
+                    >
+                      <InputLabel
+                        htmlFor="description"
+                        color="primary"
+                        focused
+                        margin="dense"
+                        sx={{
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        NFT Description
+                      </InputLabel>
                     </div>
                     <div>
                       <TextField
                         style={{ width: '94%' }}
                         id="outlined-textarea"
-                        label="Description"
                         placeholder="Description"
                         multiline
                         onChange={onDescriptionChange}
                       />
+                    </div>
+
+                    <div
+                      id="media"
+                      style={{
+                        textAlign: 'left',
+                        marginLeft: '10px',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <InputLabel
+                        htmlFor="name"
+                        color="primary"
+                        focused
+                        required
+                        margin="dense"
+                        sx={{
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Media
+                      </InputLabel>
                     </div>
                     <div>
                       <TextField
@@ -243,11 +322,27 @@ function CreateNFT() {
                         style={{ width: '94%' }}
                         type="file"
                         id="outlined-required"
-                        label="Media"
+                        label="Image/GIF"
                         InputLabelProps={{
                           shrink: true,
                         }}
-                        onChange={onImageChange}
+                        inputProps={{
+                          accept: 'image/*',
+                        }}
+                        onChange={(event) => onUploadChange(event, UploadType.Image)}
+                      />
+                      <TextField
+                        style={{ width: '94%' }}
+                        type="file"
+                        id="outlined-required"
+                        label="3D"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          accept: '.gltf, .glb',
+                        }}
+                        onChange={(event) => onUploadChange(event, UploadType.Object)}
                       />
                     </div>
                     <div>

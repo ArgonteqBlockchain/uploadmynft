@@ -11,8 +11,7 @@ import useLocalStorage from 'src/hooks/useLocalStorage';
 function Collections() {
   let helpers: StoreHelpers;
 
-  const { getItem, setItem } = useLocalStorage('showOnCollection', { show: false, onCollectionCreate: false }, true);
-
+  const { getItem, setItem } = useLocalStorage('showOnCollection', { show: true, onCollectionCreate: false }, true);
   const [tour, setTour] = useState({
     run: getItem('show', false),
     steps: getItem('onCollectionCreate', false) ? collectionStepsFinal : collectionStepsInitial,
@@ -41,13 +40,14 @@ function Collections() {
         run: false,
       });
     }
-    if (status === STATUS.FINISHED) {
-      if (getItem('onCollectionCreate', false)) {
-        setItem('show', false);
-        setItem('onCollectionCreate', false);
-      }
+    if (status === STATUS.FINISHED && getItem('onCollectionCreate', false)) {
+      alert('Setting false');
+      setItem('show', false);
+      setItem('onCollectionCreate', false);
     }
     if (status === STATUS.SKIPPED) {
+      alert('Setting false in skipped');
+
       setItem('show', false);
       setItem('onCollectionCreate', false);
     }

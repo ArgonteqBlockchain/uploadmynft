@@ -84,24 +84,22 @@ class NFTView extends React.Component<ViewProps, ViewState> {
     let { total, nftDetails, view } = this.state;
     // console.log(nftDetails, 'nftDetails');
     return (
-      <div>
-        <form onChange={this.handleChange}>
-          <div style={{ marginTop: 20 }}>
-            <div>
-              <h3 style={{ marginLeft: 10 }}> Enter NFT Attributes</h3>
-              <NFTList
-                add={this.addNewRow}
-                delete={this.clickOnDelete.bind(this)}
-                nftDetails={nftDetails}
-                current={total}
-                disp={view}
-              />
-              <Button sx={{ margin: 2 }} variant="contained" onClick={this.addNewRow}>
-                Add
-              </Button>
-            </div>
+      <div onChange={this.handleChange}>
+        <div style={{ marginTop: 20 }}>
+          <div>
+            <h3 style={{ marginLeft: 10 }}> Enter NFT Attributes</h3>
+            <NFTList
+              add={this.addNewRow}
+              delete={this.clickOnDelete.bind(this)}
+              nftDetails={nftDetails}
+              current={total}
+              disp={view}
+            />
+            <Button sx={{ margin: 2 }} variant="contained" onClick={this.addNewRow}>
+              Add
+            </Button>
           </div>
-        </form>
+        </div>
       </div>
     );
   }

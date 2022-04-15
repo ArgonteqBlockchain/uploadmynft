@@ -76,6 +76,7 @@ function Dashboard() {
     if (status === STATUS.FINISHED) {
       console.log('Completed');
       setItem('showLeft', true);
+      setItem('show', true);
       localStorage.setItem('firstTime', '{}');
     }
     if (status === STATUS.SKIPPED) {

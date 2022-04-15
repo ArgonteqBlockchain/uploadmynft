@@ -19,6 +19,7 @@ export interface INFT {
   meta: {
     name: string;
     image: string;
+    animation_url?: string;
     description: string;
     attributes: {
       trait_type: string;

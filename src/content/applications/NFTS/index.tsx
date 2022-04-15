@@ -47,7 +47,7 @@ function Nfts() {
   };
 
   return (
-    <>
+    <div>
       <Helmet>
         <title>NFTS</title>
       </Helmet>
@@ -103,7 +103,7 @@ function Nfts() {
         </Link>
       </Container>
       <Footer />
-    </>
+    </div>
   );
 }
 

@@ -155,6 +155,16 @@ export const createCollectionSteps = [
   {
     content: (
       <>
+        <h2>Collection Royalty</h2>
+        <p>The percentage added here will go into your account against transactions made on this collection.</p>
+      </>
+    ),
+    target: '#royalty',
+    placement: 'auto',
+  },
+  {
+    content: (
+      <>
         <h2>Create Collection</h2>
         <p>Click the submit button to finalize your collection.</p>
         <p>

@@ -1,10 +1,8 @@
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 import {
-  Tooltip,
   Divider,
   Box,
   Card,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -13,15 +11,12 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  useTheme,
   CardHeader,
 } from '@mui/material';
 
 import { useLocation } from 'react-router';
-import PreviewIcon from '@mui/icons-material/Preview';
-import { INFT, IToken } from 'src/models/nft';
+import { INFT } from 'src/models/nft';
 import { Collection } from 'src/models/collection';
-import { useWeb3React } from '@web3-react/core';
 import axios from 'axios';
 
 interface RecentNFTTableProps {
@@ -94,7 +89,7 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
             <TableRow>
               <TableCell>Token ID</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Image</TableCell>
+              <TableCell align="center">Media</TableCell>
               <TableCell>Details</TableCell>
             </TableRow>
           </TableHead>
@@ -113,21 +108,41 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
                       {nft.meta.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                    }}
+                  >
                     <a href={nft.meta.image} target="_blank" rel="noreferrer">
                       <div
                         style={{
                           minHeight: '140px',
                           maxHeight: '160px',
                           width: '200px',
-
+                          marginLeft: '10px',
                           marginTop: 10,
                           backgroundImage: `url(${nft.meta.image})`,
                           backgroundSize: 'contain',
                           backgroundRepeat: 'no-repeat',
                         }}
-                      ></div>
+                      />
                     </a>
+
+                    {nft.meta.animation_url && (
+                      <div
+                        style={{
+                          minHeight: '140px',
+                          maxHeight: '160px',
+                          width: '200px',
+                          marginTop: 10,
+                          marginLeft: 10,
+                          backgroundImage: `url(${nft.meta.animation_url})`,
+                          backgroundSize: 'contain',
+                          backgroundRepeat: 'no-repeat',
+                        }}
+                      />
+                    )}
                   </TableCell>
                   <TableCell>
                     <Typography variant="body1" fontWeight="bold" color="text.primary" gutterBottom noWrap>
