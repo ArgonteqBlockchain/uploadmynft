@@ -41,13 +41,10 @@ function Collections() {
       });
     }
     if (status === STATUS.FINISHED && getItem('onCollectionCreate', false)) {
-      alert('Setting false');
       setItem('show', false);
       setItem('onCollectionCreate', false);
     }
     if (status === STATUS.SKIPPED) {
-      alert('Setting false in skipped');
-
       setItem('show', false);
       setItem('onCollectionCreate', false);
     }

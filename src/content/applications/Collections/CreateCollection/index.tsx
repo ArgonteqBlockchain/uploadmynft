@@ -12,6 +12,7 @@ import {
   Tooltip,
   TextField,
   InputLabel,
+  Typography,
 } from '@mui/material';
 import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
 import generateHash from '../../../../utils/generateHash';
@@ -138,7 +139,12 @@ function CreateCollection() {
           },
         }}
       />
-      <Container maxWidth="sm">
+      <Container
+        maxWidth="sm"
+        sx={{
+          marginBottom: '10px',
+        }}
+      >
         <Grid
           container
           spacing={3}
@@ -330,6 +336,23 @@ function CreateCollection() {
                     </Grid>
                   </Box>
                 </form>
+                <Typography
+                  sx={{
+                    marginTop: '-10px',
+                  }}
+                  variant="subtitle2"
+                >
+                  Note:
+                  <ul>
+                    <li>
+                      This collection will be listed on OpenSea where it will automatically deduct 2.5% royalty on sale.
+                    </li>
+                    <li>
+                      Upload My NFT adds its own 2% royalty along with the royalty that you add here. For example, if
+                      you add 0 royalty, the total royalty will be 2% (0% user royalty + 2% Upload My NFT)
+                    </li>
+                  </ul>
+                </Typography>
               </CardContent>
             </Card>
           </Grid>

@@ -8,14 +8,25 @@ export const useLocalStorage = <T>(parentItem: string, initialValue: Record<stri
       localStorage.setItem(parentItem, JSON.stringify(initialValue));
     } else {
       // check for new fields in initialValue
-      const newFields = Object.keys(initialValue).filter((key) => !(key in initialValue));
+      const newFields = Object.keys(initialValue).filter(
+        (key) => !(key in JSON.parse(localStorage.getItem(parentItem))),
+      );
+      const oldFields = Object.keys(initialValue).filter((key) => key in JSON.parse(localStorage.getItem(parentItem)));
+      console.log('New Fields: ', newFields);
+      console.log('OLD Fields: ', oldFields);
       if (newFields.length > 0) {
         const currentValue = JSON.parse(localStorage.getItem(parentItem) || '{}');
         newFields.forEach((key) => {
           currentValue[key] = initialValue[key];
         });
         localStorage.setItem(parentItem, JSON.stringify(currentValue));
-      } else {
+      }
+      if (oldFields.length > 0) {
+        // use old fields
+        const currentValue = JSON.parse(localStorage.getItem(parentItem) || '{}');
+        oldFields.forEach((key) => {
+          initialValue[key] = currentValue[key];
+        });
         localStorage.setItem(parentItem, JSON.stringify(initialValue));
       }
     }
