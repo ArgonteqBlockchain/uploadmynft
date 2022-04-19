@@ -12,8 +12,8 @@ export const useLocalStorage = <T>(parentItem: string, initialValue: Record<stri
         (key) => !(key in JSON.parse(localStorage.getItem(parentItem))),
       );
       const oldFields = Object.keys(initialValue).filter((key) => key in JSON.parse(localStorage.getItem(parentItem)));
-      console.log('New Fields: ', newFields);
-      console.log('OLD Fields: ', oldFields);
+      // console.log('New Fields: ', newFields);
+      // console.log('OLD Fields: ', oldFields);
       if (newFields.length > 0) {
         const currentValue = JSON.parse(localStorage.getItem(parentItem) || '{}');
         newFields.forEach((key) => {

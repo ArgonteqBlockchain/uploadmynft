@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { create, Options } from 'ipfs-http-client';
 import {
   Container,
   Grid,
@@ -18,8 +19,10 @@ import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
 import generateHash from '../../../../utils/generateHash';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useWeb3React } from '@web3-react/core';
 import Fade from '@mui/material/Fade';
+import { BigNumber } from 'ethers';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -43,18 +46,28 @@ function CreateCollection() {
     steps: createCollectionSteps,
   });
 
-  const [query, setquery] = useState('free');
+  const [query, setQuery] = useState('free');
   const { account, active, error } = useWeb3React();
   const contract = useFactoryContract();
   const { callWithGasPrice } = useCallWithGasPrice();
-  const [status, setstatus] = useState(false);
-  const [hash, sethash] = useState('success');
-  const [name, setname] = useState();
-  const [symbol, setsymbol] = useState();
+  const [status, setStatus] = useState(false);
+  const [hash, setHash] = useState('success');
+  const [name, setName] = useState();
+  const [symbol, setSymbol] = useState();
   const [royalty, setRoyalty] = useState(0);
-  const [description, setdescription] = useState('');
+  const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [open, setOpen] = useState(true);
+
+  const myOption: Options = {
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+    apiPath: '/api/v0',
+    url: 'https://ipfs.infura.io:5001',
+  };
+
+  const ipfs = create(myOption);
 
   const handleClose = () => {
     setOpen(false);
@@ -63,36 +76,57 @@ function CreateCollection() {
 
   function onRoyaltyChange(e: any) {
     setRoyalty(e.target.value * 100);
-    setstatus(true);
+    setStatus(true);
+  }
+
+  function onDescriptionChange(e) {
+    setDescription(e.target.value);
+    setStatus(true);
   }
 
   function onNameChange(e) {
-    setname(e.target.value);
-    setstatus(true);
+    setName(e.target.value);
+    setStatus(true);
   }
 
   function onSymbolChange(e) {
-    setsymbol(e.target.value);
-    setstatus(true);
+    setSymbol(e.target.value);
+    setStatus(true);
+  }
+
+  function onUploadChange(e: any) {
+    if (e.target.files && e.target.files.length > 0) {
+      setImage(e.target.files[0]);
+    }
+    setStatus(true);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setquery('progress');
+    setQuery('progress');
     // console.log(name, symbol);
     if (active && !error) {
       const baseURL = generateHash(name, symbol, account);
       const serverAddr = process.env.REACT_APP_API;
       const uri = 'https://' + serverAddr + '/' + baseURL + '/';
-      // console.log(baseURL);
-      //  calling contract
-      const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri]);
-      const result = await tx.wait();
-      sethash(result.transactionHash);
-      setquery('success');
-      setItem('onCollectionCreate', true);
-      // console.log('Crete collection clincked');
-      setstatus(false);
+
+      const uploadImage = await ipfs.add(image);
+      let imageLink = 'https://ipfs.io/ipfs/' + uploadImage.path;
+
+      try {
+        const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri]);
+        const result = await tx.wait();
+        console.log(result);
+        setHash(result.transactionHash);
+        setQuery('success');
+
+        setItem('onCollectionCreate', true);
+        // console.log('Crete collection clincked');
+        setStatus(false);
+      } catch (error) {
+        setQuery('success');
+        console.log(error);
+      }
     }
   }
 
@@ -247,7 +281,44 @@ function CreateCollection() {
                         multiline
                         id="outlined-required"
                         placeholder="Description"
-                        onChange={onNameChange}
+                        onChange={onDescriptionChange}
+                      />
+                    </div>
+                    <div
+                      id="media"
+                      style={{
+                        textAlign: 'left',
+                        marginLeft: '10px',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <InputLabel
+                        htmlFor="name"
+                        color="primary"
+                        focused
+                        required
+                        margin="dense"
+                        sx={{
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Media
+                      </InputLabel>
+                    </div>
+                    <div>
+                      <TextField
+                        required
+                        style={{ width: '94%' }}
+                        type="file"
+                        id="outlined-required"
+                        label="Image/GIF"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          accept: 'image/*',
+                        }}
+                        onChange={(event) => onUploadChange(event)}
                       />
                     </div>
                     <div
@@ -269,7 +340,7 @@ function CreateCollection() {
                           fontWeight: 'bold',
                         }}
                       >
-                        Add Royalty
+                        Add Royalty (0-8)
                       </InputLabel>
                     </div>
                     <div>
