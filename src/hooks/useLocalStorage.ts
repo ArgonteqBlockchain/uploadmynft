@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 
 export const useLocalStorage = <T>(parentItem: string, initialValue: Record<string, T>, useCookies = true) => {
-  console.log({ parentItem, initialValue, useCookies });
+  // console.log({ parentItem, initialValue, useCookies });
   useEffect(() => {
-    console.log('IN use effect');
+    // console.log('IN use effect');
     if (!useCookies) {
       localStorage.setItem(parentItem, JSON.stringify(initialValue));
     } else {
@@ -35,7 +35,7 @@ export const useLocalStorage = <T>(parentItem: string, initialValue: Record<stri
   const getItem = useCallback(
     (key: string, defaultValue: T) => {
       const item = JSON.parse(localStorage.getItem(parentItem) || '{}');
-      console.log(key, defaultValue, item);
+      // console.log(key, defaultValue, item);
       if (!item[key]) {
         const newItem = { ...item, [key]: defaultValue };
         localStorage.setItem(parentItem, JSON.stringify(newItem));
@@ -50,7 +50,7 @@ export const useLocalStorage = <T>(parentItem: string, initialValue: Record<stri
     (key: string, value: T) => {
       const item = JSON.parse(localStorage.getItem(parentItem) || '{}');
       const newItem = { ...item, [key]: value };
-      console.log(newItem);
+      // console.log(newItem);
       localStorage.setItem(parentItem, JSON.stringify(newItem));
     },
     [parentItem],

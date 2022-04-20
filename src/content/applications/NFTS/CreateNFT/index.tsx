@@ -128,23 +128,33 @@ function CreateNFT() {
 
   async function mint(link: string) {
     const localAccount = account;
-    console.log(localAccount);
-    console.log(collectionContract.address);
-    const tx = await callWithGasPrice(collectionContract, 'safeMint', [localAccount]);
-    console.log(tx);
-    const result = await tx.wait();
-    console.log(result);
-    postIPFS(result as any, link);
-    return result.transactionHash;
+    // console.log(localAccount);
+    // console.log(collectionContract.address);
+    try {
+      const tx = await callWithGasPrice(collectionContract, 'safeMint', [localAccount]);
+      console.log(tx);
+      const result = await tx.wait();
+      console.log(result);
+      postIPFS(result as any, link);
+      return result.transactionHash;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
   }
 
   async function mintTo(receiverAddress: string, link: string) {
-    const tx = await callWithGasPrice(collectionContract, 'safeMint', [receiverAddress]);
-    console.log(tx);
-    const result = await tx.wait();
-    console.log(result);
-    postIPFS(result as any, link);
-    return result.transactionHash;
+    try {
+      const tx = await callWithGasPrice(collectionContract, 'safeMint', [receiverAddress]);
+      console.log(tx);
+      const result = await tx.wait();
+      console.log(result);
+      postIPFS(result as any, link);
+      return result.transactionHash;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
   }
 
   async function handleSubmitMint(e: any) {

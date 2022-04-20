@@ -19,7 +19,6 @@ import Joyride, { CallBackProps, STATUS, StoreHelpers } from 'react-joyride';
 import generateHash from '../../../../utils/generateHash';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
-import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useWeb3React } from '@web3-react/core';
 import Fade from '@mui/material/Fade';
 import { BigNumber } from 'ethers';
@@ -76,7 +75,7 @@ function CreateCollection() {
   };
 
   function onRoyaltyChange(e: any) {
-    setRoyalty(e.target.value * 100);
+    setRoyalty(e.target.value);
     setStatus(true);
   }
 
@@ -113,16 +112,13 @@ function CreateCollection() {
 
       const uploadImage = await ipfs.add(image);
       const imageLink = 'https://ipfs.io/ipfs/' + uploadImage.path;
-
+      console.log(imageLink);
       try {
         const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri, royalty * 100]);
         const result = await tx.wait();
-        console.log(result);
         setHash(result.transactionHash);
         setQuery('success');
-
         setItem('onCollectionCreate', true);
-        // console.log('Crete collection clincked');
         setStatus(false);
 
         console.log('IPFS', ipfs);
@@ -150,8 +146,9 @@ function CreateCollection() {
             console.log('Unable to post', error);
           });
       } catch (error) {
+        setHash(error.message);
         setQuery('success');
-        console.log(error);
+        console.log(error.message);
       }
     }
   }
