@@ -130,13 +130,13 @@ function CreateCollection() {
           data: {
             baseurl: baseURL,
             meta: {
-              address: result.contractAddress,
+              address: result.logs[0].address,
               name: name,
               symbol: symbol,
               description: description,
               image: imageLink,
               seller_fee_basis_points: royalty * 100 + 200,
-              fee_recipient: result.contractAddress,
+              fee_recipient: result.logs[0].address,
             },
           },
         })

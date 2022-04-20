@@ -51,7 +51,7 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
   useEffect(() => {
     axios({
       method: 'get',
-      url: `${collection.baseurl}`,
+      url: `${collection.baseurl}tokens`,
       responseType: 'json',
     })
       .then((res) => {
