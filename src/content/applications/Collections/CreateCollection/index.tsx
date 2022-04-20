@@ -116,6 +116,7 @@ function CreateCollection() {
       try {
         const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri, royalty * 100]);
         const result = await tx.wait();
+        console.log('RESULT', result);
         setHash(result.transactionHash);
         setQuery('success');
         setItem('onCollectionCreate', true);
@@ -128,8 +129,8 @@ function CreateCollection() {
           url: `https://${process.env.REACT_APP_API}/baseurl_contract`,
           data: {
             baseurl: baseURL,
-            address: result.contractAddress,
             meta: {
+              address: result.contractAddress,
               name: name,
               symbol: symbol,
               description: description,
