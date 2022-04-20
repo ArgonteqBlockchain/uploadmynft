@@ -14,9 +14,9 @@ import createKeccakHash from 'keccak';
  */
 function generateHash(name: string, symbol: string, address: string): string {
   // const createKeccakHash = require('keccak');
-  const saltLen = Math.floor(Math.random() * (50 - 10) + 10);
-  const salt = cryptoRandomString({ length: saltLen, type: 'alphanumeric' });
-  return createKeccakHash('keccak256').update(`${name}${symbol}${address}${salt}`).digest('hex');
+  // const saltLen = Math.floor(Math.random() * (50 - 10) + 10);
+  // const salt = cryptoRandomString({ length: saltLen, type: 'alphanumeric' });
+  return createKeccakHash('keccak256').update(`${name}${symbol}${address}`).digest('hex');
 }
 
 export default generateHash;

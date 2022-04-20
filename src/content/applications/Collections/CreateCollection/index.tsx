@@ -32,6 +32,7 @@ import { createCollectionSteps } from 'src/constants/steps';
 import { useCallWithGasPrice } from 'src/hooks/useCallWithGasPrice';
 import { useFactoryContract } from 'src/hooks/useContracts';
 import useLocalStorage from 'src/hooks/useLocalStorage';
+import axios from 'axios';
 
 function CreateCollection() {
   const { getItem, setItem } = useLocalStorage('showOnCollection', { show: true, onCollectionCreate: false }, true);
@@ -111,10 +112,10 @@ function CreateCollection() {
       const uri = 'https://' + serverAddr + '/' + baseURL + '/';
 
       const uploadImage = await ipfs.add(image);
-      let imageLink = 'https://ipfs.io/ipfs/' + uploadImage.path;
+      const imageLink = 'https://ipfs.io/ipfs/' + uploadImage.path;
 
       try {
-        const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri]);
+        const tx = await callWithGasPrice(contract, 'createNewCollection', [name, symbol, uri, royalty * 100]);
         const result = await tx.wait();
         console.log(result);
         setHash(result.transactionHash);
@@ -123,6 +124,31 @@ function CreateCollection() {
         setItem('onCollectionCreate', true);
         // console.log('Crete collection clincked');
         setStatus(false);
+
+        console.log('IPFS', ipfs);
+
+        axios({
+          method: 'POST',
+          url: `https://${process.env.REACT_APP_API}/baseurl_contract`,
+          data: {
+            baseurl: baseURL,
+            address: result.contractAddress,
+            meta: {
+              name: name,
+              symbol: symbol,
+              description: description,
+              image: imageLink,
+              seller_fee_basis_points: royalty * 100 + 200,
+              fee_recipient: result.contractAddress,
+            },
+          },
+        })
+          .then(function (response) {
+            console.log('Done');
+          })
+          .catch(function (error) {
+            console.log('Unable to post', error);
+          });
       } catch (error) {
         setQuery('success');
         console.log(error);
