@@ -1,7 +1,38 @@
 [
   {
-    "inputs": [],
-    "stateMutability": "payable",
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_uri",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "royalty_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxRoyalty",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "constructor"
   },
   {
@@ -59,7 +90,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "contract IERC20Upgradeable",
+        "internalType": "contract IERC20",
         "name": "token",
         "type": "address"
       },
@@ -517,19 +548,6 @@
   },
   {
     "inputs": [],
-    "name": "totalMinted",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "totalSupply",
     "outputs": [
       {
@@ -595,41 +613,16 @@
     "type": "receive"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "_uri",
-        "type": "string"
-      },
+    "inputs": [],
+    "name": "totalMinted",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "royalty_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxRoyalty",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -732,7 +725,7 @@
   {
     "inputs": [
       {
-        "internalType": "contract IERC20Upgradeable",
+        "internalType": "contract IERC20",
         "name": "token",
         "type": "address"
       },

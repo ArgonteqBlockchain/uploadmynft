@@ -1,5 +1,21 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "payees",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "shares_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -233,24 +249,6 @@
     "payable": true
   },
   {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "payees",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "shares_",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "__Factory_Init",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "getTotalCollection",
     "outputs": [
@@ -274,11 +272,6 @@
     ],
     "name": "getCollectionAddressByIndex",
     "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
       {
         "internalType": "address",
         "name": "",
@@ -346,7 +339,7 @@
   {
     "inputs": [
       {
-        "internalType": "contract IERC20Upgradeable",
+        "internalType": "contract IERC20",
         "name": "token",
         "type": "address"
       },
