@@ -1,4 +1,4 @@
-import React, { FC, ChangeEvent, useState, useEffect } from 'react';
+import React, { FC, ChangeEvent, useState, useEffect, Suspense } from 'react';
 import {
   Divider,
   Box,
@@ -13,7 +13,10 @@ import {
   Typography,
   CardHeader,
 } from '@mui/material';
-
+import { Canvas } from '@react-three/fiber';
+import { useLoader } from '@react-three/fiber';
+import { Environment, OrbitControls } from '@react-three/drei';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useLocation } from 'react-router';
 import { INFT } from 'src/models/nft';
 import { Collection } from 'src/models/collection';
@@ -37,6 +40,15 @@ const getURL = (imgLink: string, visibleValueCount: number = 6) => {
     '*****' +
     imageHash.slice(imageHash.length - 1 - visibleValueCount, imageHash.length - 1);
   return hiddenHash;
+};
+
+const Model = ({ objectLink }) => {
+  const gltf = useLoader(GLTFLoader, objectLink);
+  return (
+    <>
+      <primitive object={gltf.scene} scale={50} />
+    </>
+  );
 };
 
 const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
@@ -109,6 +121,7 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
                     </Typography>
                   </TableCell>
                   <TableCell
+                    align="center"
                     sx={{
                       display: 'flex',
                       flexDirection: 'row',
@@ -127,21 +140,22 @@ const RecentNFTsTable: FC<RecentNFTTableProps> = () => {
                           backgroundRepeat: 'no-repeat',
                         }}
                       />
+                      {console.log(nft.meta.image)}
                     </a>
 
-                    {nft.meta.animation_url && (
-                      <div
-                        style={{
-                          minHeight: '140px',
-                          maxHeight: '160px',
-                          width: '200px',
-                          marginTop: 10,
-                          marginLeft: 10,
-                          backgroundImage: `url(${nft.meta.animation_url})`,
-                          backgroundSize: 'contain',
-                          backgroundRepeat: 'no-repeat',
-                        }}
-                      />
+                    {!!nft.meta.animation_url && nft.meta.animation_url.length > 0 && (
+                      <Canvas>
+                        <Suspense fallback={null}>
+                          <Model objectLink={nft.meta.animation_url} />
+                          <OrbitControls
+                            addEventListener={undefined}
+                            hasEventListener={undefined}
+                            removeEventListener={undefined}
+                            dispatchEvent={undefined}
+                          />
+                          <Environment preset="sunset" />
+                        </Suspense>
+                      </Canvas>
                     )}
                   </TableCell>
                   <TableCell>

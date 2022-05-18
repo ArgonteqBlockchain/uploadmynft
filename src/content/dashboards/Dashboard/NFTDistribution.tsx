@@ -84,7 +84,7 @@ function NFTDistribution() {
 
   return (
     <Card sx={{ height: '100%' }}>
-      <CardHeader title="NFT Distribution" />
+      <CardHeader sx={{ ml: 1.1 }} title="NFT Distribution" />
       <FormControl
         sx={{
           marginLeft: '26px',
